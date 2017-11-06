@@ -13,7 +13,9 @@
     <script src="viz/three.js"></script>
     <script src="viz/d3.min.js" charset="utf-8"></script>
     <script src="viz/housingdata.js"></script>
-<!--     <script>
+    <script src="viz/dat.gui.min.js"></script>
+
+    <script>
 
 // create the scene
 var scene = new THREE.Scene();
@@ -111,27 +113,7 @@ function animate(t) {
 animate(new Date().getTime());
 
 document.getElementById('warning').remove();
-    </script> -->
-    <script type="text/javascript" src="dat.gui.js"></script>
-<script type="text/javascript">
-    
-var FizzyText = function() {
-  this.message = 'dat.gui';
-  this.speed = 0.8;
-  this.displayOutline = false;
-  this.explode = function() { ... };
-  // Define render logic ...
-};
-
-window.onload = function() {
-  var text = new FizzyText();
-  var gui = new dat.GUI();
-  gui.add(text, 'message');
-  gui.add(text, 'speed', -5, 5);
-  gui.add(text, 'displayOutline');
-  gui.add(text, 'explode');
-};
-    
-</script>
+    </script>
+  
   </body>
 </html>
