@@ -1,0 +1,137 @@
+
+<html>
+  <head>
+    <title>Housing Data Scatterplot</title>
+    <style>
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      canvas { width: 100%; height: 100%; position: absolute; top:0; z-index: 100; }
+    </style>
+  </head>
+  <body>
+    <div id="warning">Your browser does not support this demo.  Please enable JavaScript and WebGL, or download a <a target="_blank" href="http://browsehappy.com">download a modern browser</a></div>
+    <script src="viz/three.js"></script>
+    <script src="viz/d3.min.js" charset="utf-8"></script>
+    <script src="viz/housingdata.js"></script>
+<!--     <script>
+
+// create the scene
+var scene = new THREE.Scene();
+// create the camera with 45-degree field of view and an aspect ratio that matches the viewport
+var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+// move the camera 10 units back from the origin
+camera.position.z = 10;
+// create the renderer
+var renderer = new THREE.WebGLRenderer();
+// make the renderer fill the viewport
+renderer.setSize(window.innerWidth, window.innerHeight);
+// add the DOM element that the renderer will draw to to the page
+document.body.appendChild(renderer.domElement);
+// set the background color to almost-white
+renderer.setClearColor(0xFFFFFF, 1.0);
+renderer.clear();
+
+var scatterPlot = new THREE.Object3D();
+scene.add(scatterPlot);
+
+scatterPlot.rotation.y = 0.5;
+function v(x,y,z){ return new THREE.Vector3(x,y,z); }
+
+// Draw the bounding box
+var lineGeo = new THREE.Geometry();
+lineGeo.vertices.push(
+  v(-50, 50, -50), v(50, 50, -50),
+  v(-50, -50, -50), v(50, -50, -50),
+  v(-50, 50, 50), v(50, 50, 50),
+  v(-50, -50, 50), v(50, -50, 50),
+
+  v(50, -50, -50), v(50, 50, -50),
+  v(-50, -50, -50), v(-50, 50, -50),
+  v(50, -50, 50), v(50, 50, 50),
+  v(-50, -50, 50), v(-50, 50, 50),
+
+  v(50, 50, -50), v(50, 50, 50),
+  v(50, -50, -50), v(50, -50, 50),
+  v(-50, 50, -50), v(-50, 50, 50),
+  v(-50, -50, -50), v(-50, -50, 50)
+);
+var lineMat = new THREE.LineBasicMaterial({color: 0x808080, lineWidth: 1});
+var line = new THREE.Line(lineGeo, lineMat);
+line.type = THREE.Lines;
+//scatterPlot.add(line);
+var mat = new THREE.ParticleBasicMaterial({vertexColors:true, size: 1.5});
+
+
+// compute scales for attributes
+var indexes = [
+  // weighted distances to five Boston employment centres 
+  7,
+  // pupil-teacher ratio by town
+  10,
+  // Median value of owner-occupied homes in $1000's
+  13
+];
+var scales = indexes.map(function (idx) {
+  return d3.scale.sqrt()
+      .domain(d3.extent(HOUSING_DATA, function (d) { return d[idx]; }))
+      .range([-50, 50]);
+});
+var pointGeo = new THREE.Geometry();
+HOUSING_DATA.forEach(function (d, i) {
+  var x = scales[0](d[indexes[0]]);
+  var y = scales[1](d[indexes[1]]);
+  var z = scales[2](d[indexes[2]]);
+  pointGeo.vertices.push(v(x,y,z));
+});
+var points = new THREE.ParticleSystem(pointGeo, mat);
+scatterPlot.add(points);
+
+// add a spotlight to the scene
+var light = new THREE.SpotLight();
+light.position.set( -10, 20, 16 );
+scene.add(light);
+
+
+
+function animate(t) {
+  // update the aspect ratio and renderer size in case the window was resized
+  camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  // spin the camera in a circle
+  camera.position.x = Math.sin(t/3000)*300;
+  camera.position.y = 100;
+  camera.position.z = Math.cos(t/3000)*300;
+  // point the camera at the origin
+  camera.lookAt(scene.position);
+  // render the scene again
+  renderer.render(scene, camera);
+  // request the next animation frame to render again
+  window.requestAnimationFrame(animate, renderer.domElement);
+};
+animate(new Date().getTime());
+
+document.getElementById('warning').remove();
+    </script> -->
+    <script type="text/javascript" src="dat.gui.js"></script>
+<script type="text/javascript">
+    
+var FizzyText = function() {
+  this.message = 'dat.gui';
+  this.speed = 0.8;
+  this.displayOutline = false;
+  this.explode = function() { ... };
+  // Define render logic ...
+};
+
+window.onload = function() {
+  var text = new FizzyText();
+  var gui = new dat.GUI();
+  gui.add(text, 'message');
+  gui.add(text, 'speed', -5, 5);
+  gui.add(text, 'displayOutline');
+  gui.add(text, 'explode');
+};
+    
+</script>
+  </body>
+</html>
