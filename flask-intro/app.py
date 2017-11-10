@@ -45,17 +45,13 @@ def welcome():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-	error=None
-	if request.method=='POST':
-		#post is a request method that 
-		if request.form['username']!='admin' or request.form['password']!='admin':
-			error='Invalid credentials. Please, try again!'
-		else:
-			#valid login info
-			session['logged_in']=True
-			flash('You are logged in')
-			return redirect(url_for('home'))
-	return render_template('login.html', error=error)
+        error = None
+        level = None
+        if request.method == 'POST':
+                level = request.form['level']
+        else:
+                error = 'no emotions. please try again'
+        return render_template('login.html', error=error, level = level)
 
 @app.route('/logout')
 @login_required
