@@ -49,9 +49,16 @@ def login():
         level = None
         if request.method == 'POST':
                 level = request.form['level']
+                return redirect(url_for('mood_map'))
+
         else:
                 error = 'no emotions. please try again'
         return render_template('login.html', error=error, level = level)
+
+
+@app.route('/mood_map')
+def mood_map():
+    return render_template('scatterplot.html')  # render a template
 
 @app.route('/logout')
 @login_required
