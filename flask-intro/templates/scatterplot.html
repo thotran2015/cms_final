@@ -9,11 +9,11 @@
     </style>
   </head>
   <body>
-    <div id="warning">Your browser does not support this demo.  Please enable JavaScript and WebGL, or download a <a target="_blank" href="http://browsehappy.com">download a modern browser</a></div>
-    <script src="viz/three.js"></script>
-    <script src="viz/d3.min.js" charset="utf-8"></script>
-    <script src="viz/housingdata.js"></script>
-    <script src="viz/dat.gui.min.js"></script>
+    <!--<div id="warning">Your browser does not support this demo.  Please enable JavaScript and WebGL, or download a <a target="_blank" href="http://browsehappy.com">download a modern browser</a></div>-->
+    <script src="static/viz/three.js"></script>
+    <script src="static/viz/d3.min.js" charset="utf-8"></script>
+    <script src="static/viz/housingdata.js"></script>
+    <script src="static/viz/dat.gui.min.js"></script>
 
     <script>
 
@@ -66,7 +66,7 @@ var mat = new THREE.ParticleBasicMaterial({vertexColors:true, size: 1.5});
 
 // compute scales for attributes
 var indexes = [
-  // weighted distances to five Boston employment centres 
+  // weighted distances to five Boston employment centres
   7,
   // pupil-teacher ratio by town
   10,
@@ -112,8 +112,8 @@ function animate(t) {
 };
 animate(new Date().getTime());
 
-document.getElementById('warning').remove();
+//document.getElementById('warning').remove();
     </script>
-  
+
   </body>
 </html>

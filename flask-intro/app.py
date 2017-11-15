@@ -58,7 +58,7 @@ def login():
 
 @app.route('/mood_map')
 def mood_map():
-    return render_template('scatterplot.html')  # render a template
+    return render_template('vizpage.html')  # render a template
 
 @app.route('/logout')
 @login_required

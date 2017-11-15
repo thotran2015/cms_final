@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+  <script type="text/javascript" src="static/viz/dat.gui.js"></script>
+        <script src="static/viz/three.js"></script>
+        <script src="static/viz/d3.min.js" charset="utf-8"></script>
+        <script src="static/viz/newdata.js"></script>
+        <script src="static/viz/TrackballControls.js"></script>
+
+
+  <script type="text/javascript">
+    ///////SETTING UP THE GRAPHIC USER INTERFACE
+    //initialize object to hold the GUI parameters
+    var obj = {
+        animation: true, //checkbox controlling whether the visualization spins
+        CheckUncheckAll: true, //toggle to check or uncheck all of the tags
+    };
+
+    var gui = new dat.gui.GUI();
+    gui.remember(obj);
+    gui.add(obj, 'animation');
+
+    //tags in their own folder:
+    var f1 = gui.addFolder('Tags');
+    f1.open();
+
+    var controller = f1.add(obj, 'CheckUncheckAll');
+
+    //add tag checkboxes for each tag in the list
+    taglist=['Coursework','Exams','Friends','Family','Extracurriculars','Employment'];
+    tagslistener=[];
+    for (i = 0; i < taglist.length; i++) {
+        obj[taglist[i]]=true;
+        var newobj = f1.add(obj,taglist[i]).listen();
+        tagslistener.push(newobj)
+    }
+
+    //allow the CheckUncheckAll box to toggle all the tags
+    controller.onFinishChange(function(value) {
+
+        for (i = 0; i < taglist.length; i++) {
+            obj[taglist[i]] = value;
+        }
+        replot();
+    });
+
+
+
+
+
+    ///MAKING THE SCATTER PLOT//////////////////
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );
+
+    var scatterPlot = new THREE.Object3D();
+    scene.add(scatterPlot);
+
+    function v(x,y,z){ return new THREE.Vector3(x,y,z); }
+
+    var mat = new THREE.ParticleBasicMaterial({color: 0x88ffff, size: 1.5});
+    var indexes = [
+      // weighted distances to five Boston employment centres
+      0,
+      // pupil-teacher ratio by town
+      1,
+      // Median value of owner-occupied homes in $1000's
+      2
+    ];
+
+    // var scales = indexes.map(function (idx) {
+    //   return d3.scale.sqrt()
+    //       .domain(d3.extent(HOUSING_DATA, function (d) { return d[idx]; }))
+    //       .range([-50, 50]);
+    // });
+
+    vertices = new Map();
+    for (i = 0; i < taglist.length; i++) {
+        currentag=taglist[i];
+        vertices.set(currentag, []);
+    }
+
+    HOUSING_DATA.forEach(function (d, i) {
+      var x = (d.coords[indexes[0]]);
+      var y = (d.coords[indexes[1]]);
+      var z = (d.coords[indexes[2]]);
+      for (j = 0; j < d.tags.length; j++) {
+        vertices.get(d.tags[j]).push(v(x,y,z));
+        }
+    });
+
+
+    pointGeo= new THREE.Geometry();
+    for (j = 0; j < taglist.length; j++) {
+        for (i=0; i< vertices.get(taglist[j]).length; i++){
+            pointGeo.vertices.push(vertices.get(taglist[j])[i])
+        }
+
+    }
+    scatterPlot.add(new THREE.ParticleSystem(pointGeo, mat));
+
+
+
+
+    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.position.x = 0;
+    camera.position.y = 100;
+    camera.position.z = 300;
+    camera.lookAt(scene.position);
+
+    controls = new THREE.TrackballControls( camera );
+                controls.rotateSpeed = 1.0;
+                controls.zoomSpeed = 1.2;
+                controls.panSpeed = 0.8;
+                controls.noZoom = false;
+                controls.noPan = false;
+                controls.staticMoving = true;
+                controls.dynamicDampingFactor = 0.3;
+                controls.keys = [ 65, 83, 68 ];
+                controls.addEventListener( 'change', render );
+
+    function render() {
+                renderer.render( scene, camera );
+
+            }
+    function onWindowResize() {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize( window.innerWidth, window.innerHeight );
+                controls.handleResize();
+                render();
+            }
+    window.addEventListener( 'resize', onWindowResize, false );
+
+    function replot(){
+        while(scene.children.length > 0){
+                    scene.remove(scene.children[0]);
+                }
+                var scatterPlot = new THREE.Object3D();
+                scene.add(scatterPlot);
+
+                pointGeo= new THREE.Geometry();
+                for (j = 0; j < taglist.length; j++) {
+                    if (obj[taglist[j]]){
+                        for (i=0; i< vertices.get(taglist[j]).length; i++){
+                            pointGeo.vertices.push(vertices.get(taglist[j])[i])
+                        }
+                    }
+
+                }
+                scatterPlot.add(new THREE.ParticleSystem(pointGeo, mat));
+                renderer.render(scene, camera);
+    }
+
+    function tagsUpdate() {
+        //refresh if you change the tags
+        for (i=0; i<tagslistener.length; i++){
+            tagslistener[i].onFinishChange(function(value){
+                replot();
+                    });
+        }
+    }
+    theta=0;
+    function animate(t) {
+      // update the aspect ratio and renderer size in case the window was resized
+      // camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
+      // renderer.setSize(window.innerWidth, window.innerHeight);
+      // spin the camera in a circle
+      if (obj.animation){
+        theta=Math.atan(camera.position.x/camera.position.z)
+        theta = theta+1/300
+        camera.position.x = Math.sin(theta)*300;
+        //camera.position.y = 100;
+        camera.position.z = Math.cos(theta)*300;
+      }
+
+      // point the camera at the origin
+
+      camera.fov = 25;//*(2-obj.zoom);
+      camera.updateProjectionMatrix();
+      // render the scene again
+      renderer.render(scene, camera);
+      // request the next animation frame to render again
+      window.requestAnimationFrame(animate, renderer.domElement);
+      controls.update();
+
+        };
+
+    animate(new Date().getTime());
+    tagsUpdate();
+
+  </script>
+</body>
+</html>
