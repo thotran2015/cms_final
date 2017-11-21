@@ -52,7 +52,7 @@ def login():
                 return redirect(url_for('mood_map'))
 
         else:
-                error = 'no emotions. please try again'
+                error = 'no emotions. Please try again'
         return render_template('login.html', error=error, level = level)
 
 
