@@ -1,19 +1,64 @@
 {% extends 'base.html' %}
 {% block content %}
-
+<!--(happy int, excited int, energetic int, angry int, stressed int, tired int, upset int, sad int, calm int, content int, confused int)-->
       <h1>Please enter your mood!</h1>
       <br>
-      <form action="" method="post">
-        <input type="range" id="myRange" name = "level" value="{{
-          request.form.level }}" >
+      <form action=" {{ url_for('add_submission')}}" method="post">
+        <!-- <input type="range" id="myRange" name = "level" value="{{
+          request.form.level }}" > -->
+
+        <h3>Happiness Level: </h3>
+
+        <input type="range" name = "happy" value="{{
+          request.form.happy }}" >
           <br>
-        <input type="submit" value="Done">
+        <h3>Excitment Level: </h3>
+          <input type="range" name = "excited" value="{{
+            request.form.excited }}" >
+
+            <!-- <input type="range" id="myRange" name = "energetic" value="{{
+              request.form.level }}" >
+
+          <input type="range" id="myRange" name = "angry" value="{{
+                  request.form.level }}" >
+
+
+          <input type="range" id="myRange" name = "stressed" value="{{
+                  request.form.level }}" >
+
+
+      <input type="range" id="myRange" name = "tired" value="{{
+              request.form.level }}" >
+
+        <input type="range" id="myRange" name = "upset" value="{{
+                  request.form.level }}" >
+
+      <input type="range" id="myRange" name = "sad" value="{{
+              request.form.level }}" >
+
+      <input type="range" id="myRange" name = "calm" value="{{
+              request.form.level }}" >
+
+        <input type="range" id="myRange" name = "content" value="{{
+            request.form.level }}" >
+
+          <input type="range" id="myRange" name = "confused" value="{{
+                  request.form.level }}" >
+                   -->
+          <br>
+        <input type="submit" value="Submit">
+
+
+
+
           <h5>Your current mood level : {{level}}</h5>
-          <script>
+
+
+          <!-- <script>
           function myFunction() {
             var x = document.getElementById("myRange").value;
           }
-          </script>
+          </script> -->
       </form>
 
 

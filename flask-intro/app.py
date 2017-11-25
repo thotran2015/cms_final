@@ -6,7 +6,7 @@ import sqlite3
 app = Flask(__name__)
 app.secret_key='hi'
 #indicate that database exist
-app.database='sample.db'
+app.database='database.db'
 
 #login required decorator/ login page is always popped up first
 def login_required(f):
@@ -24,36 +24,56 @@ def login_required(f):
 # use decorators to link the function to a url
 @app.route('/')
 # call the func login_required to make sure people are loggined in to enter home page.
-@login_required
+#@login_required
 def home():
 	#create a db connection obj right after logged in
 	g.db=connect_db()
 	#query the database/fetching data from the database
-	cur=g.db.execute('select * from posts')
+	cur=g.db.execute('select * from submissions')
 	#store the fetched data in dictionaries, each post is in form of a dictionary
-	posts=[dict(title=row[0], description=row[1]) for row in cur.fetchall()]
+	submissions=[dict(happy=row[0], excited=row[1]) for row in cur.fetchall()]
 	#close database
 	g.db.close()
-	return render_template('index.html', posts=posts)
+	return render_template('index.html', submissions=submissions)
 
 @app.route('/welcome')
 def welcome():
     return render_template('welcome.html')  # render a template
 
-
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-        error = None
-        level = None
-        if request.method == 'POST':
-                level = request.form['level']
-                return redirect(url_for('mood_map'))
+##        error = None
+##        level = None
+##        if request.method == 'POST':
+##                level = request.form['level']
+##                
+##                return redirect(url_for('mood_map'))
+##
+##        else:
+##                error = 'no emotions. Please try again'
+        return render_template('login.html')
 
-        else:
-                error = 'no emotions. Please try again'
-        return render_template('login.html', error=error, level = level)
+@app.route('/add_submission', methods = ['GET', 'POST'])
+def add_submission():
+    #<!--(happy int, excited int, energetic int, angry int, stressed int, tired int, upset int, sad int, calm int, content int, confused int)-->
+    if request.method =='POST':
+        try:
+            happy = request.form['happy']
+            excited = request.form['excited']
+            with connect_db() as conn:
+                cur = conn.cursor()
+                cur.execute("INSERT INTO submissions (happy, excited) VALUES (?,?)",(happy,excited))
+                
+                conn.commit()
+                msg='Submission recorded successfully'
+        except:
+            conn.rollback()
+            msg = 'why error in insert operation'
+        finally:
+ #           msg='hi'
+            return render_template('result.html', msg = msg, happy = happy)
+            conn.close()
+
 
 
 @app.route('/mood_map')
