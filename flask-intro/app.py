@@ -31,10 +31,10 @@ def home():
 	#query the database/fetching data from the database
 	cur=g.db.execute('select * from submissions')
 	#store the fetched data in dictionaries, each post is in form of a dictionary
-	submissions=[dict(happy=row[0], excited=row[1]) for row in cur.fetchall()]
+	submissions=[dict(sub_num= i, happy=row[0], excited=row[1]) for i, row in enumerate(cur.fetchall())]
 	#close database
 	g.db.close()
-	return render_template('index.html', submissions=submissions)
+	return render_template('vizpage.html', submissions=submissions)
 
 @app.route('/welcome')
 def welcome():
@@ -70,8 +70,7 @@ def add_submission():
             conn.rollback()
             msg = 'why error in insert operation'
         finally:
- #           msg='hi'
-            return render_template('result.html', msg = msg, happy = happy)
+            return render_template('result.html', msg = msg)
             conn.close()
 
 

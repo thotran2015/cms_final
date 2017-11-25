@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script type="text/javascript">
+      var submissions ={{submissions|tojson}}
+    </script>
+    <script type="text/javascript" src="newdata.js"></script>
+
 </head>
 <body>
   <script type="text/javascript" src="static/viz/dat.gui.js"></script>
         <script src="static/viz/three.js"></script>
         <script src="static/viz/d3.min.js" charset="utf-8"></script>
-        <script src="static/viz/newdata.js"></script>
+        <!-- <script src="static/viz/newdata.js"></script> -->
         <script src="static/viz/TrackballControls.js"></script>
 
 
   <script type="text/javascript">
+
     ///////SETTING UP THE GRAPHIC USER INTERFACE
     //initialize object to hold the GUI parameters
     var obj = {
@@ -85,14 +91,26 @@
         vertices.set(currentag, []);
     }
 
-    HOUSING_DATA.forEach(function (d, i) {
-      var x = (d.coords[indexes[0]]);
-      var y = (d.coords[indexes[1]]);
-      var z = (d.coords[indexes[2]]);
-      for (j = 0; j < d.tags.length; j++) {
-        vertices.get(d.tags[j]).push(v(x,y,z));
-        }
-    });
+    //fetch data from database on the fly
+    window.HOUSING_DATA=[{coords: [ 0.00632,  18.00,   2.310], tags: ['Friends','Family']},
+    {coords: [ 8.32,  12.00,   13.10], tags: ['Friends','Exams']},
+    {coords: [ 2.832,  16.00,   13.10], tags: ['Exams']},
+    {coords: [ 1.832,  14.00,   33.10], tags: ['Coursework']},
+    {coords: [ 8.32,  12.00,   25.10], tags: ['Family','Employment']}];
+
+    {% for sub in submissions %}
+      var submit = {coords: [ {{sub.happy}},  {{sub.excited}},   2.310], tags: ['Friends','Family']}
+      window.HOUSING_DATA.push(submit)
+    {% endfor %}
+
+     HOUSING_DATA.forEach(function (d, i) {
+       var x = (d.coords[indexes[0]]);
+       var y = (d.coords[indexes[1]]);
+       var z = (d.coords[indexes[2]]);
+       for (j = 0; j < d.tags.length; j++) {
+         vertices.get(d.tags[j]).push(v(x,y,z));
+         }
+     });
 
 
     pointGeo= new THREE.Geometry();
