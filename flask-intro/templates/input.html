@@ -16,6 +16,31 @@
           <input type="range" name = "excited" value="{{
             request.form.excited }}" >
 
+      <br>
+
+
+        Reasons for your mood:
+<br>
+<label class="checkbox-inline"><input type="checkbox" value="request.form.coursework">Coursework</label>
+<label class="checkbox-inline"><input type="checkbox" value="request.form.exams">Exams</label>
+<label class="checkbox-inline"><input type="checkbox" value="request.form.friends">Friends</label>
+<label class="checkbox-inline"><input type="checkbox" value="request.form.family">Family</label>
+<label class="checkbox-inline"><input type="checkbox" value="request.form.extracurriculars">Extracurriculars</label>
+<label class="checkbox-inline"><input type="checkbox" value="request.form.employment">Employment</label>
+
+        <!-- <input type="text" name="fname">
+<br>
+        <select data-role="tagsinput">
+          <option value="Coursework">Coursework</option>
+          <option value="Exams">Exams</option>
+          <option value="Friends">Friends</option>
+          <option value="Family">Family</option>
+          <option value="Extracurriculars">Extracurriculars</option>
+          <option value="Employment">Employment</option>
+        </select> -->
+
+
+
             <!-- <input type="range" id="myRange" name = "energetic" value="{{
               request.form.level }}" >
 
@@ -45,13 +70,11 @@
           <input type="range" id="myRange" name = "confused" value="{{
                   request.form.level }}" >
                    -->
+
+
           <br>
         <input type="submit" value="Submit">
 
-
-
-
-          <h5>Your current mood level : {{level}}</h5>
 
 
           <!-- <script>
