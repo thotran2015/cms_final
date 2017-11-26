@@ -3,7 +3,7 @@ conn = sqlite3.connect('database.db')
 print ("Opened database successfully")
 
 #energetic int, angry int, stressed int, tired int, upset int, sad int, calm int, content int, confused int
-conn.execute('CREATE TABLE submissions (happy INTEGER, excited INTEGER, coursework TEXT, Exams TEXT, Friends TEXT, Famil TEXT, Extracurriculars TEXT, Employment TEXT)')
+conn.execute('CREATE TABLE submissions (happy INTEGER, excited INTEGER, coursework TEXT, exams TEXT, friends TEXT, family TEXT, extracurriculars TEXT, employment TEXT)')
 print ("Table created successfully")
 conn.close()
 

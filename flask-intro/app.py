@@ -32,13 +32,13 @@ def add_submission():
     #<!--(happy int, excited int, energetic int, angry int, stressed int, tired int, upset int, sad int, calm int, content int, confused int)-->
     if request.method =='POST':
         try:
+            msg='hi'
             happy = request.form['happy']
             excited = request.form['excited']
             tags = ['coursework','exams','friends', 'family','extracurricular','employment']
             in_tags={}
             for tag in tags:
-                in_tags[tag] = request.form[tag]
-   
+                in_tags[tag] = request.form.get(tag)
             with connect_db() as conn:
                 cur = conn.cursor()
                 cur.execute("INSERT INTO submissions (happy, excited, coursework, exams,friends,family, extracurriculars,employment) VALUES (?,?,?,?,?,?,?,?)",(happy,excited,in_tags['coursework'], in_tags['exams'],in_tags['friends'],in_tags['family'],in_tags['extracurricular'],in_tags['employment']))
