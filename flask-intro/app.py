@@ -32,7 +32,6 @@ def add_submission():
     #<!--(happy int, excited int, energetic int, angry int, stressed int, tired int, upset int, sad int, calm int, content int, confused int)-->
     if request.method =='POST':
         try:
-            msg='hi'
             happy = request.form['happy']
             excited = request.form['excited']
             tags = ['coursework','exams','friends', 'family','extracurricular','employment']
@@ -48,7 +47,7 @@ def add_submission():
             conn.rollback()
             msg = 'error in insert operation'
         finally:
-            return render_template('result.html', msg = msg)
+            return render_template('result.html', msg = msg, tag=in_tags['coursework'])
             conn.close()
 
 # use decorators to link the function to a url
