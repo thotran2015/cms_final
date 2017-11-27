@@ -32,22 +32,28 @@ def add_submission():
     #<!--(happy int, excited int, energetic int, angry int, stressed int, tired int, upset int, sad int, calm int, content int, confused int)-->
     if request.method =='POST':
         try:
-            happy = request.form['happy']
-            excited = request.form['excited']
-            tags = ['coursework','exams','friends', 'family','extracurricular','employment']
-            in_tags={}
+            data = []
+            emos=['happy', 'excited', 'energetic', 'angry', 'stressed', 'frustrated', 'upset', 'tired', 'lost', 'sad', 'calm', 'content']
+            in_emos= {}
+            for emo in emos:
+                in_emos[emo]=request.form[emo]
+                data.append(request.form[emo])
+            tags = ['midterms_exams', 'coursework', 'job', 'friends', 'family', 'relationship', 'extracurriculars', 'future', 'weather', 'politics', 'finances', 'physical_health', 'mental_health', 'homesickness', 'religious_spiritual']
+            in_tags=[]
             for tag in tags:
-                in_tags[tag] = request.form.get(tag)
+                if request.form.get(tag) =='on':
+                    in_tags.append(tag)
+            data.append(', '.join(in_tags))
             with connect_db() as conn:
                 cur = conn.cursor()
-                cur.execute("INSERT INTO submissions (happy, excited, coursework, exams,friends,family, extracurriculars,employment) VALUES (?,?,?,?,?,?,?,?)",(happy,excited,in_tags['coursework'], in_tags['exams'],in_tags['friends'],in_tags['family'],in_tags['extracurricular'],in_tags['employment']))
+                cur.execute("INSERT INTO submissions (happy, excited, energetic, angry, stressed, frustrated, upset, tired, lost, sad, calm, content, tags) VALUES (?"+", ?"*len(emos)+")", data)
                 conn.commit()
                 msg='Submission recorded successfully'
         except:
             conn.rollback()
             msg = 'error in insert operation'
         finally:
-            return render_template('result.html', msg = msg, tag=in_tags['coursework'])
+            return render_template('result.html', msg = msg, tag=data)
             conn.close()
 
 # use decorators to link the function to a url
@@ -60,7 +66,8 @@ def query_submissions():
 	#query the database/fetching data from the database
 	cur=g.db.execute('select * from submissions')
 	#store the fetched data in dictionaries, each submission is in form of a dictionary
-	submissions=[dict(sub_num= i, happy=row[0], excited=row[1], tags=row[2:]) for i, row in enumerate(cur.fetchall())]
+	submissions=[dict(sub_num= i, happy=row[0], excited=row[1], energetic = row[2], angry=row[3], stressed =row[4], frustrated =row[5], upset= row[6], tired=row[7],
+                          lost =row[8], sad = row[9], calm =row[10], content=row[11],  tags=row[12].split(',')) for i, row in enumerate(cur.fetchall())]
 	#close database
 	g.db.close()
 	return render_template('vizpage.html', submissions=submissions)

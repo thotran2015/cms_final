@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
 <!--(happy int, excited int, energetic int, angry int, stressed int, tired int, upset int, sad int, calm int, content int, confused int)-->
- <video autoplay loop id="video-background" muted plays-inline>
+  <!-- <video autoplay loop id="video-background" muted plays-inline>
   <source src="https://player.vimeo.com/external/158148793.hd.mp4?s=8e8741dbee251d5c35a759718d4b0976fbf38b6f&profile_id=119&oauth2_token_id=57447761" type="video/mp4">
-</video>
+</video> -->
 <div class="row">
-<h1 class="text-center">Please enter your mood!</h1>
+<h2 class="text-center">How are you feeling?</h2>
 </div>
 <br><br>
 <form action=" {{ url_for('add_submission')}}" method="post">
   <!--row1-->
 <div class="row">
   <div class="col-sm-6">
+    <!--emotions: happy, excited, energetic, angry, stressed, frustrated, upset, tired, lost, sad, calm, content (in this order)-->
     <!--slider 1-->
     <div class= "row subrow1">
       <div class="col-sm-4">
@@ -22,41 +23,153 @@
           request.form.happy }}" >
       </div>
   </div>
-<br><br>
     <!--slider 2-->
     <div class= "row subrow2">
       <div class="col-sm-4">
-        <h4>Excitment Level: </h4>
+        <h4>Excitement Level: </h4>
       </div>
       <div class="col-sm-6">
         <input type="range" name = "excited" value="{{
           request.form.excited }}" >
       </div>
     </div>
-<br><br>
-    <!--slider 2-->
+    <!--slider 3-->
     <div class= "row subrow3">
+      <div class="col-sm-4">
+        <h4>Energy Level: </h4>
+      </div>
+      <div class="col-sm-6">
+        <input type="range" name = "energetic" value="{{
+          request.form.energetic }}" >
+      </div>
+    </div>
+
+    <!--slider 4-->
+    <div class= "row subrow4">
+      <div class="col-sm-4">
+        <h4>Anger Level: </h4>
+      </div>
+      <div class="col-sm-6">
+        <input type="range" name = "angry" value="{{
+          request.form.angry }}" >
+      </div>
+    </div>
+
+    <!--slider 5-->
+    <div class= "row subrow5">
       <div class="col-sm-4">
         <h4>Stress Level: </h4>
       </div>
       <div class="col-sm-6">
-        <input id="ex1" data-slider-id='ex1Slider' type="range"  name = "stressed" value="{{
-            request.form.stressed}}" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14">
+        <input type="range" name = "stressed" value="{{
+          request.form.stressed }}" >
       </div>
     </div>
+
+    <!--slider 6-->
+    <div class= "row subrow6">
+      <div class="col-sm-4">
+        <h4>Frustration Level: </h4>
+      </div>
+      <div class="col-sm-6">
+        <input type="range" name = "frustrated" value="{{
+          request.form.frustrated }}" >
+      </div>
+    </div>
+
+    <!--slider 7-->
+    <div class= "row subrow7">
+      <div class="col-sm-4">
+        <h4>Upset Level: </h4>
+      </div>
+      <div class="col-sm-6">
+        <input type="range" name = "upset" value="{{
+          request.form.upset }}" >
+      </div>
+    </div>
+
+    <!--slider 8-->
+    <div class= "row subrow8">
+      <div class="col-sm-4">
+        <h4>Tiredness Level: </h4>
+      </div>
+      <div class="col-sm-6">
+        <input type="range" name = "tired" value="{{
+          request.form.tired }}" >
+      </div>
+    </div>
+
+    <!--slider 9-->
+    <div class= "row subrow9">
+      <div class="col-sm-4">
+        <h4>Lost Level: </h4>
+      </div>
+      <div class="col-sm-6">
+        <input type="range" name = "lost" value="{{
+          request.form.lost}}" >
+      </div>
+    </div>
+
+    <!--slider 10-->
+    <div class= "row subrow10">
+      <div class="col-sm-4">
+        <h4>Sadness Level: </h4>
+      </div>
+      <div class="col-sm-6">
+        <input type="range" name = "sad" value="{{
+          request.form.sad}}" >
+      </div>
+    </div>
+
+    <!--slider 11-->
+    <div class= "row subrow11">
+      <div class="col-sm-4">
+        <h4>Calmness Level: </h4>
+      </div>
+      <div class="col-sm-6">
+        <input type="range" name = "calm" value="{{
+          request.form.calm}}" >
+      </div>
+    </div>
+
+    <!--slider 12-->
+    <div class= "row subrow12">
+      <div class="col-sm-4">
+        <h4>Content Level: </h4>
+      </div>
+      <div class="col-sm-6">
+        <input type="range" name = "content" value="{{
+          request.form.content}}" >
+      </div>
+    </div>
+
+
 
   </div>
 
   <div class="col-sm-6">
     <h3>Reasons for your mood: </h3>
             <br><br>
-    <div class="btn-toolbar" data-toggle="buttons">
-          <label class="btn btn-info button"><input type="checkbox" name = "coursework">Coursework</label>
-          <label class="btn btn-info button"><input type="checkbox" name = "exams">Exams</label>
-          <label class="btn btn-info button"><input type="checkbox" name= "friends">Friends</label>
-          <label class="btn btn-info button"><input type="checkbox" name= "family">Family</label>
-          <label class="btn btn-info button"><input type="checkbox" name= "extracurriculars">Extracurriculars</label>
-          <label class="btn btn-info button"><input type="checkbox" name= "employment">Employment</label>
+<!-- tags: midterms/exams, coursework, job, friends, family, relationship,
+extracurriculars, future, weather, politics, finances, physical health, mental health, homesickness, religious/spiritual-->
+    <div class="btn-toolbar" >
+          <label class="btn btn-primary button"><input type="checkbox" name = "midterms_exams"> Midterms/Exams</label>
+          <label class="btn btn-primary button"><input type="checkbox" name = "coursework"> Coursework</label>
+          <label class="btn btn-primary button"><input type="checkbox" name = "job"> Job</label>
+          <label class="btn btn-primary button"><input type="checkbox" name= "friends"> Friends</label>
+          <label class="btn btn-primary button"><input type="checkbox" name= "family"> Family</label>
+          <label class="btn btn-primary button"><input type="checkbox" name= "relationship"> Relationship</label>
+          <label class="btn btn-primary button"><input type="checkbox" name= "extracurriculars"> Extracurriculars</label>
+          <br><br>
+          <label class="btn btn-primary button"><input type="checkbox" name= "future"> Future</label>
+          <label class="btn btn-primary button"><input type="checkbox" name= "weather"> Weather</label>
+          <label class="btn btn-primary button"><input type="checkbox" name= "politics"> Politics</label>
+          <label class="btn btn-primary button"><input type="checkbox" name= "fiances"> Fiances</label>
+          <label class="btn btn-primary button"><input type="checkbox" name= "physical health"> Physical health</label>
+          <label class="btn btn-primary button"><input type="checkbox" name= "mental health"> Mental health</label>
+          <br><br>
+          <label class="btn btn-primary button"><input type="checkbox" name= "homesickness"> Homesickness</label>
+          <label class="btn btn-primary button"><input type="checkbox" name= "religious_spiritual"> Religious/spiritual</label>
     </div>
   </div>
 
@@ -64,65 +177,6 @@
 <div class="row button text-center">
 <input type="submit" value="Submit">
 </div>
-
-
-        <!-- <input type="range" id="myRange" name = "level" value="{{
-          request.form.level }}" > -->
-
-
-
-
-        <!-- <input type="button" class="btn btn-info" value="coursework">
-        <input type="button" class="btn btn-info" value="exams"> -->
-
-        <!-- <input type="text" name="fname">
-<br>
-        <select data-role="tagsinput">
-          <option value="Coursework">Coursework</option>
-          <option value="Exams">Exams</option>
-          <option value="Friends">Friends</option>
-          <option value="Family">Family</option>
-          <option value="Extracurriculars">Extracurriculars</option>
-          <option value="Employment">Employment</option>
-        </select> -->
-
-
-
-            <!-- <input type="range" id="myRange" name = "energetic" value="{{
-              request.form.level }}" >
-
-          <input type="range" id="myRange" name = "angry" value="{{
-                  request.form.level }}" >
-
-
-          <input type="range" id="myRange" name = "stressed" value="{{
-                  request.form.level }}" >
-
-
-      <input type="range" id="myRange" name = "tired" value="{{
-              request.form.level }}" >
-
-        <input type="range" id="myRange" name = "upset" value="{{
-                  request.form.level }}" >
-
-      <input type="range" id="myRange" name = "sad" value="{{
-              request.form.level }}" >
-
-      <input type="range" id="myRange" name = "calm" value="{{
-              request.form.level }}" >
-
-        <input type="range" id="myRange" name = "content" value="{{
-            request.form.level }}" >
-
-          <input type="range" id="myRange" name = "confused" value="{{
-                  request.form.level }}" >
-                   -->
-
-          <!-- <script>
-          function myFunction() {
-            var x = document.getElementById("myRange").value;
-          }
-          </script> -->
       </form>
 
 
