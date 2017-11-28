@@ -7,6 +7,8 @@ app = Flask(__name__)
 app.secret_key='hi'
 #indicate that database exist
 app.database='database.db'
+emos=['happy', 'excited', 'energetic', 'angry', 'stressed', 'confused', 'sad', 'calm']
+tags = ['midterms_exams', 'coursework', 'job', 'friends', 'family', 'relationship', 'extracurriculars', 'future', 'weather', 'politics', 'finances', 'physical_health', 'mental_health', 'homesickness', 'religious_spiritual']
 
 #login required decorator/ login page is always popped up first
 ##def login_required(f):
@@ -33,12 +35,12 @@ def add_submission():
     if request.method =='POST':
         try:
             data = []
-            emos=['happy', 'excited', 'energetic', 'angry', 'stressed', 'confused', 'sad', 'calm']
+            #emos=['happy', 'excited', 'energetic', 'angry', 'stressed', 'confused', 'sad', 'calm']
             in_emos= {}
             for emo in emos:
                 in_emos[emo]=request.form[emo]
                 data.append(request.form[emo])
-            tags = ['midterms_exams', 'coursework', 'job', 'friends', 'family', 'relationship', 'extracurriculars', 'future', 'weather', 'politics', 'finances', 'physical_health', 'mental_health', 'homesickness', 'religious_spiritual']
+ #           tags = ['midterms_exams', 'coursework', 'job', 'friends', 'family', 'relationship', 'extracurriculars', 'future', 'weather', 'politics', 'finances', 'physical_health', 'mental_health', 'homesickness', 'religious_spiritual']
             in_tags=[]
             for tag in tags:
                 if request.form.get(tag) =='on':
@@ -61,6 +63,8 @@ def add_submission():
 # call the func login_required to make sure people are loggined in to enter home page.
 #@login_required
 def query_submissions():
+ #       emos=['happy', 'excited', 'energetic', 'angry', 'stressed', 'confused', 'sad', 'calm']
+ #       tags = ['midterms_exams', 'coursework', 'job', 'friends', 'family', 'relationship', 'extracurriculars', 'future', 'weather', 'politics', 'finances', 'physical_health', 'mental_health', 'homesickness', 'religious_spiritual']
 	#create a db connection obj right after user input data
 	g.db=connect_db()
 	#query the database/fetching data from the database
@@ -69,7 +73,7 @@ def query_submissions():
 	submissions=[dict(sub_num= i, happy=row[0], excited=row[1], energetic = row[2], angry=row[3], stressed =row[4], confused = row[5], sad = row[6], calm =row[7],  tags=row[8].split(',')) for i, row in enumerate(cur.fetchall())]
 	#close database
 	g.db.close()
-	return render_template('vizpage.html', submissions=submissions)
+	return render_template('vizpage.html', submissions=submissions, emos=emos, tags=tags)
 
 ##
 ##
