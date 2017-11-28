@@ -66,8 +66,7 @@ def query_submissions():
 	#query the database/fetching data from the database
 	cur=g.db.execute('select * from submissions')
 	#store the fetched data in dictionaries, each submission is in form of a dictionary
-	submissions=[dict(sub_num= i, happy=row[0], excited=row[1], energetic = row[2], angry=row[3], stressed =row[4], frustrated =row[5], upset= row[6], tired=row[7],
-                          lost =row[8], sad = row[9], calm =row[10], content=row[11],  tags=row[12].split(',')) for i, row in enumerate(cur.fetchall())]
+	submissions=[dict(sub_num= i, happy=row[0], excited=row[1], energetic = row[2], angry=row[3], stressed =row[4], confused = row[5], sad = row[6], calm =row[7],  tags=row[8].split(',')) for i, row in enumerate(cur.fetchall())]
 	#close database
 	g.db.close()
 	return render_template('vizpage.html', submissions=submissions)
