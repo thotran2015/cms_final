@@ -16,17 +16,20 @@
     <!--slider 1-->
     <div class= "row subrow1">
       <div class="col-sm-4">
-        <h4>Happiness Level: </h4>
+
+        <h4>Happy (0-10): </h4>
       </div>
       <div class="col-sm-6">
-        <input type="range" name = "happy" value="{{
+        <!-- <span align="left">0                                10</span>  -->
+      <input type="range" name = "happy" value="{{
           request.form.happy }}" >
+
       </div>
   </div>
     <!--slider 2-->
     <div class= "row subrow2">
       <div class="col-sm-4">
-        <h4>Excitement Level: </h4>
+        <h4>Excited: </h4>
       </div>
       <div class="col-sm-6">
         <input type="range" name = "excited" value="{{
@@ -36,7 +39,7 @@
     <!--slider 3-->
     <div class= "row subrow3">
       <div class="col-sm-4">
-        <h4>Energy Level: </h4>
+        <h4>Energetic: </h4>
       </div>
       <div class="col-sm-6">
         <input type="range" name = "energetic" value="{{
@@ -47,7 +50,7 @@
     <!--slider 4-->
     <div class= "row subrow4">
       <div class="col-sm-4">
-        <h4>Anger Level: </h4>
+        <h4>Angry: </h4>
       </div>
       <div class="col-sm-6">
         <input type="range" name = "angry" value="{{
@@ -58,7 +61,7 @@
     <!--slider 5-->
     <div class= "row subrow5">
       <div class="col-sm-4">
-        <h4>Stress Level: </h4>
+        <h4>Stressed: </h4>
       </div>
       <div class="col-sm-6">
         <input type="range" name = "stressed" value="{{
@@ -67,53 +70,20 @@
     </div>
 
     <!--slider 6-->
-    <div class= "row subrow6">
+    <div class= "row subrow9">
       <div class="col-sm-4">
-        <h4>Frustration Level: </h4>
+        <h4>Confused: </h4>
       </div>
       <div class="col-sm-6">
-        <input type="range" name = "frustrated" value="{{
-          request.form.frustrated }}" >
+        <input type="range" name = "confused" value="{{
+          request.form.confused}}" >
       </div>
     </div>
 
     <!--slider 7-->
-    <div class= "row subrow7">
-      <div class="col-sm-4">
-        <h4>Upset Level: </h4>
-      </div>
-      <div class="col-sm-6">
-        <input type="range" name = "upset" value="{{
-          request.form.upset }}" >
-      </div>
-    </div>
-
-    <!--slider 8-->
-    <div class= "row subrow8">
-      <div class="col-sm-4">
-        <h4>Tiredness Level: </h4>
-      </div>
-      <div class="col-sm-6">
-        <input type="range" name = "tired" value="{{
-          request.form.tired }}" >
-      </div>
-    </div>
-
-    <!--slider 9-->
-    <div class= "row subrow9">
-      <div class="col-sm-4">
-        <h4>Lost Level: </h4>
-      </div>
-      <div class="col-sm-6">
-        <input type="range" name = "lost" value="{{
-          request.form.lost}}" >
-      </div>
-    </div>
-
-    <!--slider 10-->
     <div class= "row subrow10">
       <div class="col-sm-4">
-        <h4>Sadness Level: </h4>
+        <h4>Sad: </h4>
       </div>
       <div class="col-sm-6">
         <input type="range" name = "sad" value="{{
@@ -121,28 +91,16 @@
       </div>
     </div>
 
-    <!--slider 11-->
+    <!--slider 8-->
     <div class= "row subrow11">
       <div class="col-sm-4">
-        <h4>Calmness Level: </h4>
+        <h4>Calm: </h4>
       </div>
       <div class="col-sm-6">
         <input type="range" name = "calm" value="{{
           request.form.calm}}" >
       </div>
     </div>
-
-    <!--slider 12-->
-    <div class= "row subrow12">
-      <div class="col-sm-4">
-        <h4>Content Level: </h4>
-      </div>
-      <div class="col-sm-6">
-        <input type="range" name = "content" value="{{
-          request.form.content}}" >
-      </div>
-    </div>
-
 
 
   </div>
@@ -164,7 +122,7 @@ extracurriculars, future, weather, politics, finances, physical health, mental h
           <label class="btn btn-primary button"><input type="checkbox" name= "future"> Future</label>
           <label class="btn btn-primary button"><input type="checkbox" name= "weather"> Weather</label>
           <label class="btn btn-primary button"><input type="checkbox" name= "politics"> Politics</label>
-          <label class="btn btn-primary button"><input type="checkbox" name= "fiances"> Fiances</label>
+          <label class="btn btn-primary button"><input type="checkbox" name= "fiances"> Finances</label>
           <label class="btn btn-primary button"><input type="checkbox" name= "physical health"> Physical health</label>
           <label class="btn btn-primary button"><input type="checkbox" name= "mental health"> Mental health</label>
           <br><br>

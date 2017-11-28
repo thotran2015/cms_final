@@ -33,7 +33,7 @@ def add_submission():
     if request.method =='POST':
         try:
             data = []
-            emos=['happy', 'excited', 'energetic', 'angry', 'stressed', 'frustrated', 'upset', 'tired', 'lost', 'sad', 'calm', 'content']
+            emos=['happy', 'excited', 'energetic', 'angry', 'stressed', 'confused', 'sad', 'calm']
             in_emos= {}
             for emo in emos:
                 in_emos[emo]=request.form[emo]
@@ -46,7 +46,7 @@ def add_submission():
             data.append(', '.join(in_tags))
             with connect_db() as conn:
                 cur = conn.cursor()
-                cur.execute("INSERT INTO submissions (happy, excited, energetic, angry, stressed, frustrated, upset, tired, lost, sad, calm, content, tags) VALUES (?"+", ?"*len(emos)+")", data)
+                cur.execute("INSERT INTO submissions (happy, excited, energetic, angry, stressed, confused, sad, calm, tags) VALUES (?"+", ?"*len(emos)+")", data)
                 conn.commit()
                 msg='Submission recorded successfully'
         except:
