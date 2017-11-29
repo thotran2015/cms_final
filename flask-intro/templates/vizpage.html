@@ -115,11 +115,21 @@ var scales = indexes.map(function (idx) {
        var y = scales[1]((d.coords[indexes[1]]));
        var z = scales[2]((d.coords[indexes[2]]));
        for (j = 0; j < d.tags.length; j++) {
-        if( tagPointMap.has(d.tags[j])){
+        if( tagPointMap.has(d.tags[j])){ //shouldn't be necessary, but here to avoid undefined error
          tagPointMap.get(d.tags[j]).push({pos: v(x,y,z), emos: d.emos});
+         
         }
+        if (j==d.tags.length-1){
+            var latestPoint={pos: v(x,y,z), emos: d.emos}
+         }
        }
      });
+
+     d=MOOD_DATA[MOOD_DATA.length-1]
+     var x = scales[0]((d.coords[indexes[0]]));
+     var y = scales[1]((d.coords[indexes[1]]));
+     var z = scales[2]((d.coords[indexes[2]]));
+     var latestPoint={pos: v(x,y,z), emos: d.emos}
 
      
     function makescatterPlot(tagPointMap,scene){
@@ -149,6 +159,14 @@ var scales = indexes.map(function (idx) {
       var material = new THREE.PointsMaterial( { size: PARTICLE_SIZE, vertexColors: THREE.VertexColors } );
       points = new THREE.Points( pointGeo, material );
       scene.add( points );
+
+      // highlight last point:
+      var geometry = new THREE.SphereGeometry( 0.5*PARTICLE_SIZE, 32, 32 );
+      var lcol = new THREE.Color(latestPoint.emos[0]/MAX_EMOTION,latestPoint.emos[1]/MAX_EMOTION,latestPoint.emos[2]/MAX_EMOTION);
+      var material = new THREE.MeshBasicMaterial( {color: lcol} );
+      var sphere = new THREE.Mesh( geometry, material );
+      sphere.position.set(latestPoint.pos.x,latestPoint.pos.y,latestPoint.pos.z);
+      scene.add( sphere );
 
       // var scatterPlot = new THREE.Object3D();
       // scene.add(scatterPlot);
