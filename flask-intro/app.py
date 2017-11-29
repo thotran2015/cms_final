@@ -2,6 +2,7 @@
 from flask import Flask, render_template, redirect, url_for, request, session,flash, g
 from functools import wraps
 import sqlite3
+import processmood as pm
 # create the application object
 app = Flask(__name__)
 app.secret_key='hi'
@@ -70,10 +71,10 @@ def query_submissions():
 	#query the database/fetching data from the database
 	cur=g.db.execute('select * from submissions')
 	#store the fetched data in dictionaries, each submission is in form of a dictionary
-	submissions=[dict(sub_num= i, happy=row[0], excited=row[1], energetic = row[2], angry=row[3], stressed =row[4], confused = row[5], sad = row[6], calm =row[7],  tags=row[8].split(',')) for i, row in enumerate(cur.fetchall())]
+	submissions=[dict(sub_num= i, emos=row[0:-1], tags=row[-1].split(',')) for i, row in enumerate(cur.fetchall())]
 	#close database
 	g.db.close()
-	return render_template('vizpage.html', submissions=submissions, emos=emos, tags=tags)
+	return render_template('vizpage.html', submissions=pm.process(submissions), appemos=emos, apptags=tags)
 
 ##
 ##

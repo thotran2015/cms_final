@@ -4,16 +4,12 @@
    <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
 </head>
 <body>
-  {{emos}}
-  {{tags}}
   <a href="/" class="btn btn-info" role="button">Go Back</a>
-  Submissions fetched from database: {{submissions}}
   <script type="text/javascript" src="static/viz/dat.gui.js"></script>
         <script src="static/viz/three.js"></script>
         <script src="static/viz/d3.min.js" charset="utf-8"></script>
         <script src="static/viz/TrackballControls.js"></script>
   <script type="text/javascript">
-
     ///////SETTING UP THE GRAPHIC USER INTERFACE
     //initialize object to hold the GUI parameters
     var obj = {
@@ -31,8 +27,17 @@
 
     var controller = f1.add(obj, 'CheckUncheckAll');
 
+    //unpack the list of tags and emotions
+    var taglist=[];
+    var moodlist = [];
+    {% for ta in apptags %}
+      taglist.push('{{ta}}')
+    {% endfor %}
+    {% for emo in appemos %}
+      moodlist.push('{{emo}}')
+    {% endfor %}
+
     //add tag checkboxes for each tag in the list
-    taglist=['Coursework','Exams','Friends','Family','Extracurriculars','Employment'];
     tagslistener=[];
     for (i = 0; i < taglist.length; i++) {
         obj[taglist[i]]=true;
@@ -61,63 +66,104 @@
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
 
-    var scatterPlot = new THREE.Object3D();
-    scene.add(scatterPlot);
+    
 
     function v(x,y,z){ return new THREE.Vector3(x,y,z); }
+    var PARTICLE_SIZE =   5;
+    var MAX_EMOTION = 100;
+    var materi = new THREE.ParticleBasicMaterial({color: 0x88ffff, size: 1.5});
+     var indexes = [0,1,2];
 
-    var mat = new THREE.ParticleBasicMaterial({color: 0x88ffff, size: 1.5});
-    var indexes = [
-      // weighted distances to five Boston employment centres
-      0,
-      // pupil-teacher ratio by town
-      1,
-      // Median value of owner-occupied homes in $1000's
-      2
-    ];
+    
 
-    // var scales = indexes.map(function (idx) {
-    //   return d3.scale.sqrt()
-    //       .domain(d3.extent(HOUSING_DATA, function (d) { return d[idx]; }))
-    //       .range([-50, 50]);
-    // });
-
-    vertices = new Map();
+    tagPointMap = new Map();
     for (i = 0; i < taglist.length; i++) {
         currentag=taglist[i];
-        vertices.set(currentag, []);
+        tagPointMap.set(currentag, []);
     }
 
     //fetch data from database on the fly
-    window.HOUSING_DATA=[{coords: [ 0.00632,  18.00,   2.310], tags: ['Friends','Family']},
-    {coords: [ 8.32,  12.00,   13.10], tags: ['Friends','Exams']},
-    {coords: [ 2.832,  16.00,   13.10], tags: ['Exams']},
-    {coords: [ 1.832,  14.00,   33.10], tags: ['Coursework']},
-    {coords: [ 8.32,  12.00,   25.10], tags: ['Family','Employment']}];
+    window.MOOD_DATA=[];
+    var allcoords=[];
 
     {% for sub in submissions %}
-      var submit = {coords: [ {{sub.happy}},  {{sub.excited}},   2.310], tags: ['Friends','Family']}
-      window.HOUSING_DATA.push(submit)
+      var subtags=[];
+      var subemos=[];
+      var subcoords=[];
+      {% for ta in sub.tags %}
+        subtags.push('{{ta}}')
+      {% endfor %}
+      {% for emo in sub.emos %}
+        subemos.push({{emo}})
+      {% endfor %}
+      {% for coord in sub.coords %}
+        subcoords.push({{coord}})
+      {% endfor %}
+      var submit = {coords: subcoords, emos: subemos, tags: subtags}
+      window.MOOD_DATA.push(submit)
+      allcoords.push(subcoords)
     {% endfor %}
 
-     HOUSING_DATA.forEach(function (d, i) {
-       var x = (d.coords[indexes[0]]);
-       var y = (d.coords[indexes[1]]);
-       var z = (d.coords[indexes[2]]);
+var scales = indexes.map(function (idx) {
+      return d3.scale.sqrt()
+          .domain(d3.extent(allcoords, function (d) { return d[idx]; }))
+          .range([-50, 50]);
+    });
+
+     MOOD_DATA.forEach(function (d, i) {
+       var x = scales[0]((d.coords[indexes[0]]));
+       var y = scales[1]((d.coords[indexes[1]]));
+       var z = scales[2]((d.coords[indexes[2]]));
        for (j = 0; j < d.tags.length; j++) {
-         vertices.get(d.tags[j]).push(v(x,y,z));
-         }
+        if( tagPointMap.has(d.tags[j])){
+         tagPointMap.get(d.tags[j]).push({pos: v(x,y,z), emos: d.emos});
+        }
+       }
      });
 
+     
+    function makescatterPlot(tagPointMap,scene){
+      
 
-    pointGeo= new THREE.Geometry();
-    for (j = 0; j < taglist.length; j++) {
-        for (i=0; i< vertices.get(taglist[j]).length; i++){
-            pointGeo.vertices.push(vertices.get(taglist[j])[i])
-        }
+      var pointGeo= new THREE.BufferGeometry();
+      var positions = [];
+      var colors=[];
+      var color = new THREE.Color();
 
+       for (j = 0; j < taglist.length; j++) {
+          if (obj[taglist[j]]){
+            for (i=0; i< tagPointMap.get(taglist[j]).length; i++){
+                currentp=tagPointMap.get(taglist[j])[i]
+                positions.push(currentp.pos.x, currentp.pos.y, currentp.pos.z)
+                var vemos=currentp.emos;
+                color.setRGB(vemos[0]/MAX_EMOTION,vemos[1]/MAX_EMOTION,vemos[2]/MAX_EMOTION);
+                colors.push(color.r,color.g,color.b);
+            }
+          }
+      }
+
+      pointGeo.addAttribute('position', new THREE.Float32BufferAttribute(positions,3));
+      pointGeo.addAttribute('color', new THREE.Float32BufferAttribute( colors, 3 ) );
+      pointGeo.computeBoundingSphere();
+
+      var material = new THREE.PointsMaterial( { size: PARTICLE_SIZE, vertexColors: THREE.VertexColors } );
+      points = new THREE.Points( pointGeo, material );
+      scene.add( points );
+
+      // var scatterPlot = new THREE.Object3D();
+      // scene.add(scatterPlot);
+      // pointGeo= new THREE.Geometry();
+      // for (j = 0; j < taglist.length; j++) {
+      //     if (obj[taglist[j]]){
+      //       for (i=0; i< tagPointMap.get(taglist[j]).length; i++){
+      //           pointGeo.tagPointMap.push(tagPointMap.get(taglist[j])[i])
+      //       }
+      //     }
+      // }
+      // scatterPlot.add(new THREE.ParticleSystem(pointGeo, materi));
     }
-    scatterPlot.add(new THREE.ParticleSystem(pointGeo, mat));
+      
+    makescatterPlot(tagPointMap,scene)
 
 
 
@@ -125,7 +171,7 @@
     camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
     renderer.setSize(window.innerWidth, window.innerHeight);
     camera.position.x = 0;
-    camera.position.y = 100;
+    camera.position.y = 600;
     camera.position.z = 300;
     camera.lookAt(scene.position);
 
@@ -157,20 +203,8 @@
         while(scene.children.length > 0){
                     scene.remove(scene.children[0]);
                 }
-                var scatterPlot = new THREE.Object3D();
-                scene.add(scatterPlot);
-
-                pointGeo= new THREE.Geometry();
-                for (j = 0; j < taglist.length; j++) {
-                    if (obj[taglist[j]]){
-                        for (i=0; i< vertices.get(taglist[j]).length; i++){
-                            pointGeo.vertices.push(vertices.get(taglist[j])[i])
-                        }
-                    }
-
-                }
-                scatterPlot.add(new THREE.ParticleSystem(pointGeo, mat));
-                renderer.render(scene, camera);
+                makescatterPlot(tagPointMap,scene);
+                render();
     }
 
     function tagsUpdate() {
@@ -197,10 +231,10 @@
 
       // point the camera at the origin
 
-      camera.fov = 25;//*(2-obj.zoom);
+      camera.fov = 20;//*(2-obj.zoom);
       camera.updateProjectionMatrix();
       // render the scene again
-      renderer.render(scene, camera);
+      render();
       // request the next animation frame to render again
       window.requestAnimationFrame(animate, renderer.domElement);
       controls.update();
