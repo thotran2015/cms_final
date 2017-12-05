@@ -11,21 +11,24 @@
         <script src="static/viz/TrackballControls.js"></script>
   <script type="text/javascript">
     ///////SETTING UP THE GRAPHIC USER INTERFACE
-    //initialize object to hold the GUI parameters
-    var obj = {
+    //initialize object guiParams to hold the GUI parameters
+    var guiParams = {
         animation: true, //checkbox controlling whether the visualization spins
         CheckUncheckAll: true, //toggle to check or uncheck all of the tags
     };
 
     var gui = new dat.gui.GUI();
-    gui.remember(obj);
-    gui.add(obj, 'animation');
+    gui.remember(guiParams);
+    gui.add(guiParams, 'animation');
 
+    //emotions in their own folder:
+    var f2 = gui.addFolder('Emotion to Color By');
+    f2.open();
     //tags in their own folder:
     var f1 = gui.addFolder('Tags');
-    f1.open();
+    
 
-    var controller = f1.add(obj, 'CheckUncheckAll');
+    var controller = f1.add(guiParams, 'CheckUncheckAll');
 
     //unpack the list of tags and emotions
     var taglist=[];
@@ -40,8 +43,8 @@
     //add tag checkboxes for each tag in the list
     tagslistener=[];
     for (i = 0; i < taglist.length; i++) {
-        obj[taglist[i]]=true;
-        var newobj = f1.add(obj,taglist[i]).listen();
+        guiParams[taglist[i]]=true;
+        var newobj = f1.add(guiParams,taglist[i]).listen();
         tagslistener.push(newobj)
     }
 
@@ -49,12 +52,28 @@
     controller.onFinishChange(function(value) {
 
         for (i = 0; i < taglist.length; i++) {
-            obj[taglist[i]] = value;
+            guiParams[taglist[i]] = value;
         }
         replot();
     });
 
 
+    //add emotion checkboxes
+    moodlistener=[];
+    for (i = 0; i < moodlist.length; i++) {
+        guiParams[moodlist[i]]=(i==0);
+        var newobj = f2.add(guiParams,moodlist[i]).listen().onChange(function(){setChecked(moodlistener)});
+        moodlistener.push(newobj)
+    }
+
+    //ensure only one emotion is ever checked at once
+    function setChecked(moodlistener){
+      for (i = 0; i < moodlist.length; i++) {
+        if (guiParams[moodlist[i]] == moodlistener[i].__prev){
+          guiParams[moodlist[i]]=false;
+      }
+      }
+    }
 
 
 
@@ -139,14 +158,15 @@ var scales = indexes.map(function (idx) {
       var positions = [];
       var colors=[];
       var color = new THREE.Color();
+      var colormoodindex = moodlistener.findIndex(x => x.__prev==true);
 
        for (j = 0; j < taglist.length; j++) {
-          if (obj[taglist[j]]){
+          if (guiParams[taglist[j]]){
             for (i=0; i< tagPointMap.get(taglist[j]).length; i++){
                 currentp=tagPointMap.get(taglist[j])[i]
                 positions.push(currentp.pos.x, currentp.pos.y, currentp.pos.z)
-                var vemos=currentp.emos;
-                color.setRGB(vemos[0]/MAX_EMOTION,vemos[1]/MAX_EMOTION,vemos[2]/MAX_EMOTION);
+                var pemo=currentp.emos[colormoodindex];
+                color.setRGB(pemo/MAX_EMOTION,0,1-pemo/MAX_EMOTION);
                 colors.push(color.r,color.g,color.b);
             }
           }
@@ -162,7 +182,7 @@ var scales = indexes.map(function (idx) {
 
       // highlight last point:
       var geometry = new THREE.SphereGeometry( 0.5*PARTICLE_SIZE, 32, 32 );
-      var lcol = new THREE.Color(latestPoint.emos[0]/MAX_EMOTION,latestPoint.emos[1]/MAX_EMOTION,latestPoint.emos[2]/MAX_EMOTION);
+      var lcol = new THREE.Color(latestPoint.emos[colormoodindex]/MAX_EMOTION,0,1-latestPoint.emos[colormoodindex]/MAX_EMOTION);
       var material = new THREE.MeshBasicMaterial( {color: lcol} );
       var sphere = new THREE.Mesh( geometry, material );
       sphere.position.set(latestPoint.pos.x,latestPoint.pos.y,latestPoint.pos.z);
@@ -172,7 +192,7 @@ var scales = indexes.map(function (idx) {
       // scene.add(scatterPlot);
       // pointGeo= new THREE.Geometry();
       // for (j = 0; j < taglist.length; j++) {
-      //     if (obj[taglist[j]]){
+      //     if (guiParams[taglist[j]]){
       //       for (i=0; i< tagPointMap.get(taglist[j]).length; i++){
       //           pointGeo.tagPointMap.push(tagPointMap.get(taglist[j])[i])
       //       }
@@ -225,11 +245,17 @@ var scales = indexes.map(function (idx) {
                 render();
     }
 
-    function tagsUpdate() {
+    function guiUpdate() {
         //refresh if you change the tags
         for (i=0; i<tagslistener.length; i++){
             tagslistener[i].onFinishChange(function(value){
                 replot();
+                    });
+        }
+        for (i=0; i<moodlistener.length; i++){
+            moodlistener[i].onFinishChange(function(value){
+                replot();
+                
                     });
         }
     }
@@ -239,7 +265,7 @@ var scales = indexes.map(function (idx) {
       // camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
       // renderer.setSize(window.innerWidth, window.innerHeight);
       // spin the camera in a circle
-      if (obj.animation){
+      if (guiParams.animation){
         theta=Math.atan(camera.position.x/camera.position.z)
         theta = theta+1/300
         camera.position.x = Math.sin(theta)*300;
@@ -249,7 +275,7 @@ var scales = indexes.map(function (idx) {
 
       // point the camera at the origin
 
-      camera.fov = 20;//*(2-obj.zoom);
+      camera.fov = 20;//*(2-guiParams.zoom);
       camera.updateProjectionMatrix();
       // render the scene again
       render();
@@ -260,7 +286,7 @@ var scales = indexes.map(function (idx) {
         };
 
     animate(new Date().getTime());
-    tagsUpdate();
+    guiUpdate();
 
   </script>
 </body>
