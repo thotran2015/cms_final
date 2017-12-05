@@ -85,7 +85,6 @@ HOUSING_DATA.forEach(function (d, i) {
   var z = scales[2](d[indexes[2]]);
   pointGeo.vertices.push(v(x,y,z));
 });
-
 var points = new THREE.ParticleSystem(pointGeo, mat);
 scatterPlot.add(points);
 

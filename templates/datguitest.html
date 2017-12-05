@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+  <script type="text/javascript" src="static/viz/dat.gui.js"></script>
+        <script src="static/viz/three.js"></script>
+        <script src="static/viz/d3.min.js" charset="utf-8"></script>
+
+
+  <script type="text/javascript">
+    var obj = {
+        message: 'Hello World',
+        displayOutline: false,
+        maxSize: 6.0,
+        speed: 5,
+        height: 10,
+        noiseStrength: 10.2,
+        growthSpeed: 0.2,
+        type: 'three',
+        explode: function () {
+          alert('Bang!');
+        },
+        color0: "#ffae23", // CSS string
+        color1: [ 0, 128, 255 ], // RGB array
+        color2: [ 0, 128, 255, 0.3 ], // RGB with alpha
+        color3: { h: 350, s: 0.9, v: 0.3 } // Hue, saturation, value
+    };
+    var gui = new dat.gui.GUI();
+    gui.remember(obj);
+    gui.add(obj, 'message');
+    gui.add(obj, 'displayOutline');
+    gui.add(obj, 'explode');
+    gui.add(obj, 'maxSize').min(-10).max(10).step(0.25);
+    gui.add(obj, 'height').step(5); // Increment amount
+    // Choose from accepted values
+    gui.add(obj, 'type', [ 'one', 'two', 'three' ] );
+    // Choose from named values
+    gui.add(obj, 'speed', { Stopped: 0, Slow: 0.1, Fast: 5 } );
+    var f1 = gui.addFolder('Colors');
+    f1.addColor(obj, 'color0');
+    f1.addColor(obj, 'color1');
+    f1.addColor(obj, 'color2');
+    f1.addColor(obj, 'color3');
+    var f2 = gui.addFolder('Another Folder');
+    f2.add(obj, 'noiseStrength');
+    var f3 = f2.addFolder('Nested Folder');
+    f3.add(obj, 'growthSpeed');
+
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );
+
+    var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+    var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+    var cube = new THREE.Mesh( geometry, material );
+    scene.add( cube );
+
+    var scatterPlot = new THREE.Object3D();
+    scene.add(scatterPlot);
+
+    function v(x,y,z){ return new THREE.Vector3(x,y,z); }
+
+    var mat = new THREE.ParticleBasicMaterial({vertexColors:true, size: 1.5});
+    var indexes = [
+      // weighted distances to five Boston employment centres
+      7,
+      // pupil-teacher ratio by town
+      10,
+      // Median value of owner-occupied homes in $1000's
+      13
+    ];
+
+    //something here is causing it to break !!
+    // var scales = indexes.map(function (idx) {
+    //   return d3.scale.sqrt()
+    //       .domain(d3.extent(HOUSING_DATA, function (d) { return d[idx]; }))
+    //       .range([-50, 50]);
+    // });
+    // var pointGeo = new THREE.Geometry();
+    // HOUSING_DATA.forEach(function (d, i) {
+    //   var x = scales[0](d[indexes[0]]);
+    //   var y = scales[1](d[indexes[1]]);
+    //   var z = scales[2](d[indexes[2]]);
+    //   pointGeo.vertices.push(v(x,y,z));
+    // });
+    // var points = new THREE.ParticleSystem(pointGeo, mat);
+    // scatterPlot.add(points);
+
+
+    camera.position.z = 5;
+    function animate() {
+        requestAnimationFrame( animate );
+        cube.rotation.x += obj.maxSize;
+        cube.rotation.y += 0.01;
+        renderer.render( scene, camera );
+    }
+    animate();
+  </script>
+</body>
+</html>

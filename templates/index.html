@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+
+      <h1>Welcome to Flask!</h2>
+      <br>
+      <p>Click <a href="/logout">here</a> to logout.</p>
+      <br>
+      <input type="range">
+      <br>
+      <h3>Posts</h3>
+      {% for sub in submissions %}
+            <strong>Submission number: </strong>{{sub.sub_num}} <br>
+            <strong>Happy: </strong>{{sub.happy}} <br>
+            <strong>Excited: </strong>{{sub.excited}}<br>
+      <br>
+      {% endfor %}
+
+{% endblock %}
