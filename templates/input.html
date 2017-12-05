@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+{% block content %}
+<!--(happy int, excited int, energetic int, angry int, stressed int, tired int, upset int, sad int, calm int, content int, confused int)-->
+<!-- <video autoplay loop id="video-background" muted plays-inline>
+  <source src="https://player.vimeo.com/external/158148793.hd.mp4?s=8e8741dbee251d5c35a759718d4b0976fbf38b6f&profile_id=119&oauth2_token_id=57447761" type="video/mp4">
+</video> -->
+<style>
+#slidecontainer {
+    width: 100%;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 25px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    background: #4CAF50;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    background: #4CAF50;
+    cursor: pointer;
+}
+</style>
+<div class="row">
+<h1 class="text-center">How are you feeling?</h1>
+</div>
+<br><br>
+<form action=" {{ url_for('add_submission')}}" method="post">
+  <!--row1-->
+<div class="row">
+  <div class="col-sm-6">
+    <!--emotions: happy, excited, energetic, angry, stressed, frustrated, upset, tired, lost, sad, calm, content (in this order)-->
+    <!--slider 1-->
+    <div class= "row subrow1">
+      <div class="col-sm-4">
+        <h4>Happy (0-100): </h4>
+      </div>
+      <div class="col-sm-6">
+        <div id="slidecontainer">
+            <input type="range" name = "happy" value="0" value="{{
+          request.form.happy}}" min="0" max="100" value=0 class="slider" id="myRange1">
+            <p>Value: <span id="demo1"></span></p>
+        </div>
+      </div>
+  </div>
+    <!--slider 2-->
+    <div class= "row subrow2">
+      <div class="col-sm-4">
+        <h4>Excited: </h4>
+      </div>
+      <div class="col-sm-6">
+        <div id="slidecontainer">
+            <input type="range" name = "excited" value="0" value="{{
+          request.form.excited}}" min="0" max="100" value="0" class="slider" id="myRange2">
+            <p>Value: <span id="demo2"></span></p>
+        </div>
+      </div>
+    </div>
+    <!--slider 3-->
+    <div class= "row subrow3">
+      <div class="col-sm-4">
+        <h4>Energetic: </h4>
+      </div>
+      <div class="col-sm-6">
+        <div id="slidecontainer">
+            <input type="range" name = "energetic" value="0" value="{{
+          request.form.energetic}}" min="0" max="100" value="0" class="slider" id="myRange3">
+            <p>Value: <span id="demo3"></span></p>
+        </div>
+      </div>
+    </div>
+
+    <!--slider 4-->
+    <div class= "row subrow4">
+      <div class="col-sm-4">
+        <h4>Angry: </h4>
+      </div>
+      <div class="col-sm-6">
+        <div id="slidecontainer">
+            <input type="range" name = "angry" value="0" value="{{
+          request.form.angry}}" min="0" max="100" value="10" class="slider" id="myRange4">
+            <p>Value: <span id="demo4"></span></p>
+        </div>
+      </div>
+    </div>
+
+    <!--slider 5-->
+    <div class= "row subrow5">
+      <div class="col-sm-4">
+        <h4>Stressed: </h4>
+      </div>
+      <div class="col-sm-6">
+        <div id="slidecontainer">
+            <input type="range" name = "stressed" value="0" value="{{
+          request.form.stressed}}" min="0" max="100" value="0" class="slider" id="myRange5">
+            <p>Value: <span id="demo5"></span></p>
+        </div>
+      </div>
+    </div>
+
+    <!--slider 6-->
+    <div class= "row subrow9">
+      <div class="col-sm-4">
+        <h4>Confused: </h4>
+      </div>
+      <div class="col-sm-6">
+        <div id="slidecontainer">
+            <input type="range" name = "confused" value="0" value="{{
+          request.form.confused}}" min="0" max="100" value="0" class="slider" id="myRange6">
+            <p>Value: <span id="demo6"></span></p>
+        </div>
+      </div>
+    </div>
+
+    <!--slider 7-->
+    <div class= "row subrow10">
+      <div class="col-sm-4">
+        <h4>Sad: </h4>
+      </div>
+      <div class="col-sm-6">
+        <div id="slidecontainer">
+            <input type="range" name = "sad" value="0" value="{{
+          request.form.sad}}" min="0" max="100"  class="slider" id="myRange7">
+            <p>Value: <span id="demo7"></span></p>
+        </div>
+      </div>
+    </div>
+
+    <!--slider 8-->
+    <div class= "row subrow11">
+      <div class="col-sm-4">
+        <h4>Calm: </h4>
+      </div>
+      <div class="col-sm-6">
+        <div id="slidecontainer">
+            <input type="range" name = "calm" value="0" value="{{
+          request.form.calm}}" min="0" max="100" steps ="1" class="slider" id="myRange8">
+            <p>Value: <span id="demo8"></span></p>
+        </div>
+      </div>
+    </div>
+
+
+<!--Displaye slider values-->
+<script>
+// slider 1
+var slider1 = document.getElementById("myRange1");
+var output1 = document.getElementById("demo1");
+output1.innerHTML = slider1.value; // Display the default slider value
+// Update the current slider value (each time you drag the slider handle)
+slider1.oninput = function() {
+    output1.innerHTML = this.value;
+}
+// slider 2
+var slider2 = document.getElementById("myRange2");
+var output2 = document.getElementById("demo2");
+output2.innerHTML = slider2.value; // Display the default slider value
+// Update the current slider value (each time you drag the slider handle)
+slider2.oninput = function() {
+    output2.innerHTML = this.value;
+}
+//slider 3
+var slider3 = document.getElementById("myRange3");
+var output3 = document.getElementById("demo3");
+output3.innerHTML = slider3.value; // Display the default slider value
+// Update the current slider value (each time you drag the slider handle)
+slider3.oninput = function() {
+    output3.innerHTML = this.value;
+}
+//slider 4
+var slider4 = document.getElementById("myRange4");
+var output4 = document.getElementById("demo4");
+output4.innerHTML = slider4.value; // Display the default slider value
+// Update the current slider value (each time you drag the slider handle)
+slider4.oninput = function() {
+    output4.innerHTML = this.value;
+}
+//slider 5
+var slider5 = document.getElementById("myRange5");
+var output5 = document.getElementById("demo5");
+output5.innerHTML = slider5.value; // Display the default slider value
+// Update the current slider value (each time you drag the slider handle)
+slider5.oninput = function() {
+    output5.innerHTML = this.value;
+}
+//slider 6
+var slider6 = document.getElementById("myRange6");
+var output6 = document.getElementById("demo6");
+output6.innerHTML = slider6.value; // Display the default slider value
+// Update the current slider value (each time you drag the slider handle)
+slider6.oninput = function() {
+    output6.innerHTML = this.value;
+}
+//slider 7
+var slider7 = document.getElementById("myRange7");
+var output7 = document.getElementById("demo7");
+output7.innerHTML = slider7.value; // Display the default slider value
+// Update the current slider value (each time you drag the slider handle)
+slider7.oninput = function() {
+    output7.innerHTML = this.value;
+}
+
+//slider 8
+var slider8 = document.getElementById("myRange8");
+var output8 = document.getElementById("demo8");
+output8.innerHTML = slider8.value; // Display the default slider value
+// Update the current slider value (each time you drag the slider handle)
+slider8.oninput = function() {
+    output8.innerHTML = this.value;
+}
+</script>
+
+  </div>
+
+  <div class="col-sm-6">
+    <h3>Reasons for your mood: </h3>
+            <br><br>
+<!-- tags: midterms/exams, coursework, job, friends, family, relationship,
+extracurriculars, future, weather, politics, finances, physical health, mental health, homesickness, religious/spiritual-->
+
+    <div class= "row subrow1">
+                <label class="btn btn-primary button"><input type="checkbox" name = "midterms_exams"> Midterms/Exams</label>
+                <label class="btn btn-primary button"><input type="checkbox" name = "coursework"> Coursework</label>
+                <label class="btn btn-primary button"><input type="checkbox" name = "job"> Job</label>
+                <label class="btn btn-primary button"><input type="checkbox" name= "friends"> Friends</label>
+                <label class="btn btn-primary button"><input type="checkbox" name= "family"> Family</label>
+                <label class="btn btn-primary button"><input type="checkbox" name= "relationship"> Relationship</label>
+                <label class="btn btn-primary button"><input type="checkbox" name= "extracurriculars"> Extracurriculars</label>
+    </div>
+    <br>
+    <div class= "row subrow2">
+          <label class="btn btn-primary button"><input type="checkbox" name= "future"> Future</label>
+          <label class="btn btn-primary button"><input type="checkbox" name= "weather"> Weather</label>
+          <label class="btn btn-primary button"><input type="checkbox" name= "politics"> Politics</label>
+          <label class="btn btn-primary button"><input type="checkbox" name= "fiances"> Finances</label>
+          <label class="btn btn-primary button"><input type="checkbox" name= "physical health"> Physical health</label>
+          <label class="btn btn-primary button"><input type="checkbox" name= "mental health"> Mental health</label>
+    </div>
+    <br>
+    <div class= "row subrow3">
+          <label class="btn btn-primary button"><input type="checkbox" name= "homesickness"> Homesickness</label>
+          <label class="btn btn-primary button"><input type="checkbox" name= "religious_spiritual"> Religious/spiritual</label>
+    </div>
+</div>
+  </div>
+
+</div>
+<div class="row button text-center">
+<input type="submit" value="Submit">
+</div>
+      </form>
+
+
+
+
+{% endblock %}

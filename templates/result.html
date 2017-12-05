@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+        <h3> {{ msg }}</h3>
+
+        <!--'happy', 'excited', 'energetic', 'angry', 'stressed', 'confused', 'sad', 'calm'-->
+        <h4>Your input: </h4>
+            <strong>Happy: </strong>{{data[0]}} <br>
+            <strong>Excited: </strong>{{data[1]}} <br>
+            <strong>Energetic': </strong>{{data[2]}} <br>
+            <strong>Angry: </strong>{{data[3]}} <br>
+            <strong>Stressed: </strong>{{data[4]}} <br>
+            <strong>Confused: </strong>{{data[5]}} <br>
+            <strong>Sad: </strong>{{data[6]}} <br>
+            <strong>Calm: </strong>{{data[7]}} <br>
+            <strong>Tags: </strong>{{data[8]}} <br>
+
+        <h1><a href = '/mood_map'>Click here to view Mood Map</a></h1>
+
+
+{% endblock %}

@@ -1,3 +1,4 @@
+
 # import the Flask class from the flask module
 from flask import Flask, render_template, redirect, url_for, request, session,flash, g
 from functools import wraps
@@ -9,6 +10,7 @@ app.secret_key='hi'
 #indicate that database exist
 app.database='database.db'
 emos=['happy', 'excited', 'energetic', 'angry', 'stressed', 'confused', 'sad', 'calm']
+#emos=['happy', 'excited']
 tags = ['midterms_exams', 'coursework', 'job', 'friends', 'family', 'relationship', 'extracurriculars', 'future', 'weather', 'politics', 'finances', 'physical_health', 'mental_health', 'homesickness', 'religious_spiritual']
 
 #login required decorator/ login page is always popped up first
@@ -40,7 +42,7 @@ def add_submission():
             in_emos= {}
             for emo in emos:
                 in_emos[emo]=request.form[emo]
-                data.append(request.form[emo])
+                data.append(int(request.form[emo]))
  #           tags = ['midterms_exams', 'coursework', 'job', 'friends', 'family', 'relationship', 'extracurriculars', 'future', 'weather', 'politics', 'finances', 'physical_health', 'mental_health', 'homesickness', 'religious_spiritual']
             in_tags=[]
             for tag in tags:
@@ -49,6 +51,7 @@ def add_submission():
             data.append(', '.join(in_tags))
             with connect_db() as conn:
                 cur = conn.cursor()
+                #cur.execute("INSERT INTO submissions (happy,excited) VALUES (?,?)", (data[0],data[1]))
                 cur.execute("INSERT INTO submissions (happy, excited, energetic, angry, stressed, confused, sad, calm, tags) VALUES (?"+", ?"*len(emos)+")", data)
                 conn.commit()
                 msg='Submission recorded successfully'
@@ -56,7 +59,7 @@ def add_submission():
             conn.rollback()
             msg = 'error in insert operation'
         finally:
-            return render_template('result.html', msg = msg, tag=data)
+            return render_template('result.html', msg = msg, data=data)
             conn.close()
 
 # use decorators to link the function to a url
@@ -64,8 +67,6 @@ def add_submission():
 # call the func login_required to make sure people are loggined in to enter home page.
 #@login_required
 def query_submissions():
- #       emos=['happy', 'excited', 'energetic', 'angry', 'stressed', 'confused', 'sad', 'calm']
- #       tags = ['midterms_exams', 'coursework', 'job', 'friends', 'family', 'relationship', 'extracurriculars', 'future', 'weather', 'politics', 'finances', 'physical_health', 'mental_health', 'homesickness', 'religious_spiritual']
 	#create a db connection obj right after user input data
 	g.db=connect_db()
 	#query the database/fetching data from the database
@@ -74,7 +75,7 @@ def query_submissions():
 	submissions=[dict(sub_num= i, emos=row[0:-1], tags=row[-1].split(',')) for i, row in enumerate(cur.fetchall())]
 	#close database
 	g.db.close()
-	return render_template('vizpage.html', submissions=pm.process(submissions), appemos=emos, apptags=tags)
+	return render_template('vizpage.html' , submissions=pm.process(submissions), appemos=emos, apptags=tags)
 
 ##
 ##
