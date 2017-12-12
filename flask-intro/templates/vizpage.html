@@ -19,8 +19,9 @@
     };
 
     var gui = new dat.gui.GUI();
-    gui.remember(guiParams);
+    //gui.remember(guiParams);
     gui.add(guiParams, 'animation');
+    
 
     //emotions in their own folder:
     var f2 = gui.addFolder('Emotion to Color By');
@@ -60,6 +61,7 @@
 
 
     //add emotion checkboxes
+    var colormoodindex = 0; //important: keeps track of which mood is checked.
     moodlistener=[];
     for (i = 0; i < moodlist.length; i++) {
         guiParams[moodlist[i]]=(i==0);
@@ -72,7 +74,10 @@
       for (i = 0; i < moodlist.length; i++) {
         if (guiParams[moodlist[i]] == moodlistener[i].__prev){
           guiParams[moodlist[i]]=false;
-      }
+        }
+        else {
+          colormoodindex=i;
+        }
       }
     }
 
@@ -167,8 +172,8 @@ var scales = indexes.map(function (idx) {
       var colors=[];
       var sizes= [];
       var color = new THREE.Color();
-      var colormoodindex = moodlistener.findIndex(x => x.__prev==true);
-
+      //var colormoodindex = moodlistener.findIndex(x => x.__prev==true);
+      //console.log(colormoodindex)
        for (j = 0; j < taglist.length; j++) {
           if (guiParams[taglist[j]]){
             for (i=0; i< tagPointMap.get(taglist[j]).length; i++){
@@ -265,7 +270,6 @@ var scales = indexes.map(function (idx) {
     window.addEventListener( 'resize', onWindowResize, false );
 
     function replot(){
-
         while(scene.children.length > 0){
                     scene.remove(scene.children[0]);
                 }
