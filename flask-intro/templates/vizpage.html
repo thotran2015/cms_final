@@ -10,25 +10,7 @@
         <script src="static/viz/d3.min.js" charset="utf-8"></script>
         <script src="static/viz/Sky.js"></script>
         <script src="static/viz/OrbitControls.js"></script>
-          <script type="x-shader/x-vertex" id="vertexshader">
-      uniform float amplitude;
-      attribute float size;
-      
-      void main() {
-        
-        gl_PointSize = size ;
-      }
-    </script>
-
-    <script type="x-shader/x-fragment" id="fragmentshader">
-      uniform vec3 color;
-      uniform sampler2D texture;
-      varying vec3 vColor;
-      void main() {
-        gl_FragColor = vec4( color * vColor, 1.0 );
-        gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord );
-      }
-    </script>
+         
   <script type="text/javascript">
     ///////SETTING UP THE GRAPHIC USER INTERFACE
     //initialize object guiParams to hold the GUI parameters
@@ -108,7 +90,7 @@
     
 
     function v(x,y,z){ return new THREE.Vector3(x,y,z); }
-    var PARTICLE_SIZE =   25;
+    var PARTICLE_SIZE =   100;
     var MAX_EMOTION = 100;
     var materi = new THREE.ParticleBasicMaterial({color: 0x88ffff, size: 1.5});
      var indexes = [0,1,2];
@@ -194,7 +176,7 @@ var scales = indexes.map(function (idx) {
                 currentp=tagPointMap.get(taglist[j])[i]
                 positions.push(currentp.pos.x, currentp.pos.y, currentp.pos.z)
                 var pemo=currentp.emos[colormoodindex];
-                color.setRGB(pemo/MAX_EMOTION,0,1-pemo/MAX_EMOTION);
+                color.setRGB(1-pemo/MAX_EMOTION,pemo/MAX_EMOTION,0);
                 colors.push(color.r,color.g,color.b);
                 sizes.push(Math.random()*PARTICLE_SIZE*2)
             }
@@ -216,8 +198,8 @@ var scales = indexes.map(function (idx) {
       // highlight last point:
       var lgeometry = new THREE.Geometry();
       lgeometry.vertices.push(latestPoint.pos)
-      var lcol = new THREE.Color(latestPoint.emos[colormoodindex]/MAX_EMOTION,0,1-latestPoint.emos[colormoodindex]/MAX_EMOTION);
-      var lmaterial = new THREE.PointsMaterial({size: 15*PARTICLE_SIZE, color: lcol, map: lTexture, blending: THREE.AdditiveBlending, transparent: true, depthTest: false } );
+      var lcol = new THREE.Color(1-latestPoint.emos[colormoodindex]/MAX_EMOTION,latestPoint.emos[colormoodindex]/MAX_EMOTION,0);
+      var lmaterial = new THREE.PointsMaterial({size: 5*PARTICLE_SIZE, color: lcol, map: lTexture, blending: THREE.AdditiveBlending, transparent: true, depthTest: false } );
 
       
       //var spheregeometry = new THREE.SphereGeometry( 0.5*PARTICLE_SIZE, 32, 32 );
@@ -350,7 +332,7 @@ var scales = indexes.map(function (idx) {
 
       // point the camera at the origin
 
-      camera.fov = 20;//*(2-guiParams.zoom);
+      camera.fov = 10;//*(2-guiParams.zoom);
       camera.updateProjectionMatrix();
       // render the scene again
       render();
