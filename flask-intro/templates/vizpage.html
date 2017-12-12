@@ -8,7 +8,6 @@
   <script type="text/javascript" src="static/viz/dat.gui.js"></script>
         <script src="static/viz/three.js"></script>
         <script src="static/viz/d3.min.js" charset="utf-8"></script>
-        <script src="static/viz/Sky.js"></script>
         <script src="static/viz/OrbitControls.js"></script>
          
   <script type="text/javascript">
@@ -212,29 +211,6 @@ var scales = indexes.map(function (idx) {
       
       scene.add(starField);
 
-      sky = new THREE.Sky();
-      sky.scale.setScalar( 450000 );
-      scene.add( sky );
-      // Add Sun Helper
-      sunSphere = new THREE.Mesh(
-        new THREE.SphereBufferGeometry( 20000, 16, 8 ),
-        new THREE.MeshBasicMaterial( { color: 0xffffff } )
-      );
-      sunSphere.position.y = - 700000;
-      sunSphere.visible = false;
-      scene.add( sunSphere );
-      var effectController  = {
-          turbidity: 10,
-          rayleigh: 2,
-          mieCoefficient: 0.005,
-          mieDirectionalG: 0.8,
-          luminance: 1,
-          inclination: 0.49, // elevation / inclination
-          azimuth: 0.25, // Facing front,
-          sun: ! true
-        };
-        var distance = 400000;
-
       // var scatterPlot = new THREE.Object3D();
       // scene.add(scatterPlot);
       // pointGeo= new THREE.Geometry();
@@ -284,7 +260,6 @@ var scales = indexes.map(function (idx) {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
                 renderer.setSize( window.innerWidth, window.innerHeight );
-                controls.handleResize();
                 render();
             }
     window.addEventListener( 'resize', onWindowResize, false );
